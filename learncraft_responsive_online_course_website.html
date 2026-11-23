@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnCraft — Responsive Online Course Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & GLOBAL RESET
+       ========================================================================== */
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #eef2ff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #4338ca;
+      --primary-dark: #312e81;
+      --primary-soft: #e0e7ff;
+      --accent: #0d9488;
+      --accent-soft: #ccfbf1;
+      --gold: #d97706;
+      --gold-soft: #fef3c7;
+      --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.09);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --container: 1180px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(100% - 2.5rem, var(--container));
+      margin-inline: auto;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION HEADER & PURE CSS MOBILE MENU
+       ========================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(248, 250, 252, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 74px;
+      position: relative;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      box-shadow: 0 6px 16px rgba(67, 56, 202, 0.25);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      padding: 0.72rem 1.35rem;
+      transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(67, 56, 202, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.84rem;
+    }
+
+    .nav-toggle {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .nav-burger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--ink);
+      margin-inline: auto;
+      border-radius: 2px;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION
+       ========================================================================== */
+    .hero {
+      padding: 3.4rem 0 4.2rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.38rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: clamp(2.3rem, 4.5vw, 3.65rem);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.04rem;
+      max-width: 52ch;
+      margin-bottom: 1.7rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-bottom: 2.1rem;
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.2rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.32rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .metric span {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .hero-media {
+      position: relative;
+    }
+
+    .hero-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-card img {
+      width: 100%;
+      height: 430px;
+      object-fit: cover;
+    }
+
+    .hero-badge-card {
+      position: absolute;
+      bottom: 1.25rem;
+      left: -1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.1rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 280px;
+    }
+
+    .hero-badge-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .hero-badge-card strong {
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    .hero-badge-card span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ==========================================================================
+       4. SHARED SECTION HEADINGS
+       ========================================================================== */
+    section {
+      padding: 3.8rem 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.1rem;
+    }
+
+    .section-head h2 {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 46ch;
+      font-size: 0.96rem;
+    }
+
+    /* ==========================================================================
+       5. COURSE CATEGORIES GRID
+       ========================================================================== */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+    }
+
+    .category-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 0.9rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .category-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      display: grid;
+      place-items: center;
+      font-size: 1.45rem;
+      margin: 0 auto 0.75rem;
+    }
+
+    .category-card h3 {
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .category-card span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ==========================================================================
+       6. COURSES GRID
+       ========================================================================== */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .course-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .course-thumb {
+      position: relative;
+      height: 195px;
+      overflow: hidden;
+      background: var(--surface-soft);
+    }
+
+    .course-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .course-card:hover .course-thumb img {
+      transform: scale(1.04);
+    }
+
+    .level-pill {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--ink);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .rating-pill {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: var(--ink);
+      color: #ffffff;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    .course-body {
+      padding: 1.2rem 1.25rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .course-topic {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .course-body h3 {
+      font-size: 1.14rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .course-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .course-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-bottom: 0.85rem;
+      margin-bottom: 0.85rem;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .course-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .course-price {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .course-price span {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-left: 0.3rem;
+    }
+
+    /* ==========================================================================
+       7. INSTRUCTORS SECTION
+       ========================================================================== */
+    .instructors-section {
+      background: var(--surface-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .instructors-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.35rem;
+    }
+
+    .instructor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.35rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .instructor-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .instructor-avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 0.9rem;
+      border: 3px solid var(--primary-soft);
+    }
+
+    .instructor-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .instructor-role {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.65rem;
+    }
+
+    .instructor-bio {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .instructor-stats {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      display: inline-block;
+    }
+
+    /* ==========================================================================
+       8. STUDENT REVIEWS & TESTIMONIALS
+       ========================================================================== */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem;
+    }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.15rem;
+    }
+
+    .stars {
+      color: var(--gold);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+    }
+
+    .review-quote {
+      font-size: 0.92rem;
+      color: var(--ink);
+    }
+
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding-top: 0.9rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .reviewer-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .reviewer strong {
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    .reviewer span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ==========================================================================
+       9. ENROLLMENT CALLOUT & FOOTER
+       ========================================================================== */
+    .enroll-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .enroll-banner h2 {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      line-height: 1.2;
+      margin-bottom: 0.45rem;
+    }
+
+    .enroll-banner p {
+      color: #e0e7ff;
+      max-width: 48ch;
+      font-size: 0.95rem;
+    }
+
+    .btn-light {
+      background: #ffffff;
+      color: var(--primary-dark);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .btn-light:hover {
+      background: var(--gold-soft);
+    }
+
+    .site-footer {
+      background: var(--ink);
+      color: #e2e8f0;
+      padding: 3rem 0 1.75rem;
+      margin-top: 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 2rem;
+      padding-bottom: 2.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-brand {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-about {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      max-width: 34ch;
+    }
+
+    .footer-col h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+      font-size: 0.86rem;
+      color: #94a3b8;
+    }
+
+    .footer-col a:hover {
+      color: #ffffff;
+    }
+
+    .footer-bottom {
+      padding-top: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    /* ==========================================================================
+       10. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card img {
+        height: 360px;
+      }
+
+      .hero-badge-card {
+        left: 1rem;
+      }
+
+      .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .courses-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .instructors-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-burger {
+        display: flex;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9rem;
+        padding: 1.15rem 1.25rem 1.4rem;
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav-toggle:checked ~ .nav-links {
+        display: flex;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .courses-grid,
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .enroll-banner {
+        padding: 1.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 1.5rem, var(--container));
+      }
+
+      .categories-grid,
+      .instructors-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card img {
+        height: 270px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand">
+        <span class="brand-icon" aria-hidden="true">🎓</span>
+        <span>LearnCraft</span>
+      </a>
+
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation menu" />
+      <label for="nav-toggle" class="nav-burger" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <ul class="nav-links">
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#instructors">Instructors</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+      </ul>
+
+      <a href="#courses" class="btn btn-primary btn-sm header-cta">Enroll Now</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Self-Paced &amp; Project-Based Learning</span>
+          <h1>Build practical skills with <span>expert-led courses</span></h1>
+          <p>
+            Explore curated categories in web development, UI/UX design, data science,
+            and digital marketing with clear pricing, experienced mentors, and lifetime access.
+          </p>
+          <div class="hero-actions">
+            <a href="#courses" class="btn btn-primary">Explore Courses</a>
+            <a href="#instructors" class="btn btn-secondary">Meet Instructors</a>
+          </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>48+</strong>
+              <span>Structured Courses</span>
+            </div>
+            <div class="metric">
+              <strong>24k+</strong>
+              <span>Active Learners</span>
+            </div>
+            <div class="metric">
+              <strong>4.9 &#9733;</strong>
+              <span>Average Course Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-media">
+          <div class="hero-card">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=1200&amp;q=80"
+              onerror="this.src='https://placehold.co/1200x800/e0e7ff/312e81?text=LearnCraft+Online+Learning'"
+              alt="Students collaborating on laptops in a modern study workspace"
+            />
+          </div>
+          <div class="hero-badge-card">
+            <div class="hero-badge-icon">&#10003;</div>
+            <div>
+              <strong>Certificate Included</strong>
+              <span>Hands-on capstone projects &amp; notes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Course Categories Section -->
+    <section id="categories">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Course Categories</h2>
+            <p>Browse learning tracks designed for beginners, career switchers, and builders.</p>
+          </div>
+        </div>
+
+        <div class="categories-grid">
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">💻</div>
+            <h3>Web Development</h3>
+            <span>12 courses</span>
+          </a>
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">🎨</div>
+            <h3>UI/UX Design</h3>
+            <span>8 courses</span>
+          </a>
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">📊</div>
+            <h3>Data &amp; Analytics</h3>
+            <span>9 courses</span>
+          </a>
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">📱</div>
+            <h3>Mobile Apps</h3>
+            <span>6 courses</span>
+          </a>
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">📣</div>
+            <h3>Digital Marketing</h3>
+            <span>5 courses</span>
+          </a>
+          <a href="#courses" class="category-card">
+            <div class="category-icon" aria-hidden="true">☁️</div>
+            <h3>Cloud &amp; DevOps</h3>
+            <span>4 courses</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Courses Section -->
+    <section id="courses">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Popular Courses</h2>
+            <p>Structured lessons, real-world exercises, and transparent course pricing.</p>
+          </div>
+        </div>
+
+        <div class="courses-grid">
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=Modern+Web+Development'"
+                alt="Laptop showing clean HTML and CSS code editor"
+              />
+              <span class="level-pill">Beginner</span>
+              <span class="rating-pill">4.9 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">Web Development</span>
+              <h3>Modern HTML5 &amp; Responsive CSS3</h3>
+              <p class="course-desc">
+                Master semantic markup, Flexbox, CSS Grid, responsive layouts, and clean UI design by building real pages.
+              </p>
+              <div class="course-meta">
+                <span>14 hrs &bull; 38 lessons</span>
+                <span>Dr. Maya Lin</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$39 <span>$69</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=UI+UX+Interface+Design'"
+                alt="UI UX designer sketching wireframes and color palettes"
+              />
+              <span class="level-pill">All Levels</span>
+              <span class="rating-pill">4.8 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">UI/UX Design</span>
+              <h3>Visual Hierarchy &amp; Interface Systems</h3>
+              <p class="course-desc">
+                Learn typography pairing, color contrast, spacing scales, wireframing, and accessible component design.
+              </p>
+              <div class="course-meta">
+                <span>11 hrs &bull; 29 lessons</span>
+                <span>Liam O'Connor</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$44 <span>$79</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=Data+Analytics+Foundations'"
+                alt="Analytics dashboard charts on a monitor"
+              />
+              <span class="level-pill">Beginner</span>
+              <span class="rating-pill">4.9 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">Data &amp; Analytics</span>
+              <h3>Data Storytelling &amp; Visual Dashboards</h3>
+              <p class="course-desc">
+                Turn raw spreadsheets into clear charts, KPI summaries, and decision-ready reports with confidence.
+              </p>
+              <div class="course-meta">
+                <span>12 hrs &bull; 32 lessons</span>
+                <span>Nadia Patel</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$49 <span>$85</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=Mobile+App+Design'"
+                alt="Smartphone displaying a clean mobile application screen"
+              />
+              <span class="level-pill">Intermediate</span>
+              <span class="rating-pill">4.7 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">Mobile Apps</span>
+              <h3>Mobile-First UX &amp; Touch Patterns</h3>
+              <p class="course-desc">
+                Design thumb-friendly navigation, responsive cards, smooth micro-transitions, and mobile checkout flows.
+              </p>
+              <div class="course-meta">
+                <span>9.5 hrs &bull; 24 lessons</span>
+                <span>Liam O'Connor</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$35 <span>$60</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=Digital+Marketing+Strategy'"
+                alt="Marketing strategy analytics and campaign metrics"
+              />
+              <span class="level-pill">All Levels</span>
+              <span class="rating-pill">4.8 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">Digital Marketing</span>
+              <h3>Content Strategy &amp; Conversion Basics</h3>
+              <p class="course-desc">
+                Craft clear landing page messaging, audience funnels, and campaign experiments that convert visitors.
+              </p>
+              <div class="course-meta">
+                <span>8 hrs &bull; 21 lessons</span>
+                <span>Carlos Mendez</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$29 <span>$55</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="course-card">
+            <div class="course-thumb">
+              <img
+                src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                onerror="this.src='https://placehold.co/900x550/e0e7ff/312e81?text=Git+and+Deployment+Workflow'"
+                alt="Developer code and terminal setup on desk"
+              />
+              <span class="level-pill">Beginner</span>
+              <span class="rating-pill">4.9 &#9733;</span>
+            </div>
+            <div class="course-body">
+              <span class="course-topic">Cloud &amp; DevOps</span>
+              <h3>Git Workflows &amp; Static Site Hosting</h3>
+              <p class="course-desc">
+                Version-control your projects with Git, structure clean repositories, and publish websites online.
+              </p>
+              <div class="course-meta">
+                <span>7 hrs &bull; 19 lessons</span>
+                <span>Dr. Maya Lin</span>
+              </div>
+              <div class="course-footer">
+                <div class="course-price">$25 <span>$49</span></div>
+                <a href="#enroll-cta" class="btn btn-primary btn-sm">Enroll Now</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Instructors Section -->
+    <section id="instructors" class="instructors-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Meet Our Instructors</h2>
+            <p>Learn from practitioners who break complex concepts into clear steps.</p>
+          </div>
+        </div>
+
+        <div class="instructors-grid">
+          <article class="instructor-card">
+            <img
+              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+              onerror="this.src='https://placehold.co/300x300/e0e7ff/312e81?text=Maya+Lin'"
+              alt="Portrait of instructor Dr. Maya Lin"
+              class="instructor-avatar"
+            />
+            <h3>Dr. Maya Lin</h3>
+            <p class="instructor-role">Front-End &amp; Web Architecture</p>
+            <p class="instructor-bio">
+              10+ years teaching responsive web standards, accessibility, and hands-on coding fundamentals.
+            </p>
+            <span class="instructor-stats">8,400+ Students &bull; 4.9 &#9733;</span>
+          </article>
+
+          <article class="instructor-card">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+              onerror="this.src='https://placehold.co/300x300/e0e7ff/312e81?text=Liam+OConnor'"
+              alt="Portrait of instructor Liam O'Connor"
+              class="instructor-avatar"
+            />
+            <h3>Liam O'Connor</h3>
+            <p class="instructor-role">Lead Product &amp; UI Designer</p>
+            <p class="instructor-bio">
+              Specializes in clean layout grids, typography systems, and intuitive user interfaces across web and mobile.
+            </p>
+            <span class="instructor-stats">6,200+ Students &bull; 4.8 &#9733;</span>
+          </article>
+
+          <article class="instructor-card">
+            <img
+              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+              onerror="this.src='https://placehold.co/300x300/e0e7ff/312e81?text=Nadia+Patel'"
+              alt="Portrait of instructor Nadia Patel"
+              class="instructor-avatar"
+            />
+            <h3>Nadia Patel</h3>
+            <p class="instructor-role">Data &amp; Analytics Mentor</p>
+            <p class="instructor-bio">
+              Helps students interpret metrics, build visual summaries, and communicate insights clearly.
+            </p>
+            <span class="instructor-stats">5,100+ Students &bull; 4.9 &#9733;</span>
+          </article>
+
+          <article class="instructor-card">
+            <img
+              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+              onerror="this.src='https://placehold.co/300x300/e0e7ff/312e81?text=Carlos+Mendez'"
+              alt="Portrait of instructor Carlos Mendez"
+              class="instructor-avatar"
+            />
+            <h3>Carlos Mendez</h3>
+            <p class="instructor-role">Growth &amp; Content Strategist</p>
+            <p class="instructor-bio">
+              Focuses on clear storytelling, landing page clarity, and audience-first digital campaigns.
+            </p>
+            <span class="instructor-stats">4,500+ Students &bull; 4.8 &#9733;</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Student Reviews & Testimonials Section -->
+    <section id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Student Reviews</h2>
+            <p>Feedback from learners who completed courses and built portfolio projects.</p>
+          </div>
+        </div>
+
+        <div class="reviews-grid">
+          <article class="review-card">
+            <div>
+              <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="review-quote">
+                "The HTML5 and CSS3 course made Grid and responsive breakpoints click immediately. I finished my first responsive site in a weekend."
+              </p>
+            </div>
+            <div class="reviewer">
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=200&amp;q=80"
+                onerror="this.src='https://placehold.co/150x150/e0e7ff/312e81?text=Hannah'"
+                alt="Hannah Kim"
+                class="reviewer-avatar"
+              />
+              <div>
+                <strong>Hannah Kim</strong>
+                <span>Front-End Beginner &bull; Web Dev Track</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card">
+            <div>
+              <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="review-quote">
+                "Super practical lessons without fluff. Every section builds toward a real outcome, and the instructor notes are easy to revisit."
+              </p>
+            </div>
+            <div class="reviewer">
+              <img
+                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&amp;fit=crop&amp;w=200&amp;q=80"
+                onerror="this.src='https://placehold.co/150x150/e0e7ff/312e81?text=David'"
+                alt="David Brooks"
+                class="reviewer-avatar"
+              />
+              <div>
+                <strong>David Brooks</strong>
+                <span>Product Designer &bull; UI/UX Track</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card">
+            <div>
+              <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <p class="review-quote">
+                "Clear explanations, fair pricing, and well-paced modules. I went from feeling overwhelmed by layouts to shipping clean responsive pages."
+              </p>
+            </div>
+            <div class="reviewer">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=200&amp;q=80"
+                onerror="this.src='https://placehold.co/150x150/e0e7ff/312e81?text=Priya'"
+                alt="Priya Nair"
+                class="reviewer-avatar"
+              />
+              <div>
+                <strong>Priya Nair</strong>
+                <span>Marketing Analyst &bull; Data Track</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enrollment Callout Section -->
+    <section id="enroll-cta">
+      <div class="container">
+        <div class="enroll-banner">
+          <div>
+            <h2>Ready to start your next learning milestone?</h2>
+            <p>
+              Pick a course above to begin at your own pace with structured lessons,
+              clear project goals, and mobile-friendly study access.
+            </p>
+          </div>
+          <a href="#courses" class="btn btn-light">Browse All Courses</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">🎓 LearnCraft</div>
+          <p class="footer-about">
+            A responsive online course platform built with HTML5 and CSS3 as a clean front-end web development project.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#categories">Course Categories</a></li>
+            <li><a href="#courses">Popular Courses</a></li>
+            <li><a href="#instructors">Instructors</a></li>
+            <li><a href="#reviews">Student Reviews</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Top Tracks</h4>
+          <ul>
+            <li><a href="#courses">Web Development</a></li>
+            <li><a href="#courses">UI/UX Design</a></li>
+            <li><a href="#courses">Data &amp; Analytics</a></li>
+            <li><a href="#courses">Mobile &amp; Cloud</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#enroll-cta">Get Started</a></li>
+            <li><a href="#top">Back to Top</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 LearnCraft Mini Web Project. Built with HTML5 &amp; CSS3.</span>
+        <span>Responsive Desktop &amp; Mobile Interface</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
